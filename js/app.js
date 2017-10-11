@@ -10,8 +10,9 @@ var check = [];
 var clicks = 0;		// count number of clicks
 var compare = [];	//will take the selected cards to be compared 
 var checking = false;	// used to be true while comparing the selected cards which take 500 ms
-var moveCounter = 0, matched = 0;		//count number of moves which present 2 clicks, // count number of matched cards
+var moveCounter = 0, matched =0;		//count number of moves which present 2 clicks, // count number of matched cards
 var star, halfStar, restart_button;		// used to hold classes star, halfstar, restart
+var time = '0:0:00';
 
 /**
 * @description Represents jquery function
@@ -25,10 +26,14 @@ cards = $('.card');
 deck = $('.deck');
 star = $('#s');
 restart_button = $('.restart');
+//game_start_time();
 
 
 $('.score-panel').css("font-size",24);
-$('.moves').text('0');
+
+$('.score-panel').append('<span class=time-played>'+time+'</span>');
+
+time = GameTimer();
 
 cards.each(function(){		// used to add the elements of object cards into cardsArray in order to be shuffled
 	cardsArray.push($(this).children());
@@ -128,27 +133,22 @@ cards.on('click',function(){	// executed when click on one card occur
 							cards.remove();
 				
 							deck.append('<li class=card><i id=win>You Win!</i></li>');
-							deck.append('<li class=card><i id=mark>You got '+ moveCounter + ' moves</i></li>');
+						
+							var n =time_value;
+							const final_time = time;
+							$('.time-played').remove();
+							deck.append('<li class=card><i id=mark>'+ moveCounter + ' moves in '+n+'</i></li>');
 				
 				
 				
-							if(moveCounter<=12){		// to set how many stars user got at the end
+							if(moveCounter<=14){		// to set how many stars user got at the end
 								deck.append('<li class=card><i class="fa fa-star"></i>'+'<i class="fa fa-star"></i>'+'<i class="fa fa-star"></i>');
 							}
-							else if(12<moveCounter && moveCounter<=16){
-								deck.append('<li class=card><i class="fa fa-star"></i>'+'<i class="fa fa-star"></i>'+'<i class="fa fa-star-half"></i>');
-							}
-							else if(16<moveCounter && moveCounter<=20){
+							else if(14<moveCounter && moveCounter<=20){
 								deck.append('<li class=card><i class="fa fa-star"></i>'+'<i class="fa fa-star"></i>');
 							}
-							else if(20<moveCounter && moveCounter<=24){
-								deck.append('<li class=card><i class="fa fa-star"></i>'+'<i class="fa fa-star-half"></i>');
-							}
-							else if(24<moveCounter && moveCounter<=28){
+							else if(20<moveCounter){
 								deck.append('<li class=card><i class="fa fa-star"></i>');
-							}
-							else if(28<moveCounter){
-								deck.append('<li class=card><i class="fa fa-star-half"></i>');
 							}
 							deck.append('</li>');
 
@@ -183,24 +183,14 @@ cards.on('click',function(){	// executed when click on one card occur
 				}		
 
 
-				if(moveCounter<=12){		// set stars in the score panel while playing
+				if(moveCounter<=14){		// set stars in the score panel while playing
 					;
 				}
-				else if(12<moveCounter && moveCounter<=16){
-					$('.stars').children().last().remove();$('.stars').append('<i class="fa fa-star-half"></i>');
-				}
-				else if(16<moveCounter && moveCounter<=20){
+				else if(14<moveCounter && moveCounter<=20){
 					$('.stars').children().remove();$('.stars').append('<i class="fa fa-star"></i>');$('.stars').append('<i class="fa fa-star"></i>');
 				}
-				else if(20<moveCounter && moveCounter<=24){
-					console.log("what?");
-					$('.stars').children().last().remove();$('.stars').append('<i class="fa fa-star-half"></i>');
-				}
-				else if(24<moveCounter && moveCounter<=28){
+				else if(20<moveCounter){
 					$('.stars').children().remove();$('.stars').append('<i class="fa fa-star"></i>');
-				}
-				else if(28<moveCounter){
-					$('.stars').children().remove();$('.stars').append('<i class="fa fa-star-half"></i>');
 				}
 
 
@@ -246,7 +236,41 @@ function shuffle(array) {
     return array;
 }
 
+/**
+* @description calculate time taken 
+* @source udacity reviewer
+*/
+function GameTimer(){
+	const game_start_time = new Date().getTime();
 
+	timer = setInterval(function(){
+
+		let current_time = new Date().getTime();
+		let current_time_played = current_time - game_start_time;
+		let hrs = Math.floor((current_time_played % (1000*60*60*24))/(1000*60*60));
+		let mins = Math.floor((current_time_played % (1000*60*60))/(1000*60));
+		let secs = Math.floor((current_time_played %(1000*60))/1000);
+
+		if(hrs==0 && mins == 0){
+			time_value = secs+' secs  ';
+		}
+		else if (hrs == 0 ){
+			time_value = mins+' mins  '+secs+' secs  ';
+
+		}
+		else{
+			time_value = hrs + ' hours  '+mins+' mins  '+secs+' secs  ';
+		}
+		
+		if(secs<10){
+			secs = '0' +secs;
+		}
+
+		current_time_played = hrs+':'+mins+':'+secs;
+		$('.time-played').text(current_time_played);
+
+	}, 500);
+};
 
 
 /*
