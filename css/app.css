@@ -156,6 +156,7 @@ h1 {
   0% {
     transform: translate(15px);
     background-color: #800000;
+      /*this color was got from: https://www.w3schools.com/cssref/css_colors.asp*/
   
   }
   15%{
@@ -190,6 +191,7 @@ h1 {
     }
     to{
       transform: scale(1.1,1.1);
+        /*this animation was got from: https://www.w3schools.com/css/css3_2dtransforms.asp*/
       background-color: #3CB371;
     }
 }
